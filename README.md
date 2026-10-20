@@ -1,132 +1,133 @@
 # StoryForge
 
-**Среда для написания книг.** Граф сюжета вместо линейного списка глав, редактор с
-заметками, база «мира» с фактами на любой момент истории и MCP-сервер, чтобы модель
-могла читать и писать книгу напрямую.
+**A writing environment for books.** A plot graph instead of a flat chapter list, an editor
+with anchored notes, a "world" database that answers questions about any point in the story,
+and an MCP server so a model can read and write the book directly.
 
-Переписано с Node.js на Rust: одно окно, один процесс, встроенная SQLite. Node.js на
-машине не нужен — ни для запуска, ни для сборки.
+Rewritten from Node.js to Rust: one window, one process, embedded SQLite. Node.js is not
+required to run it — or to build it.
 
-![Граф сюжета](docs/screenshot-graph.png)
+![Plot graph](docs/screenshot-graph.png)
 
-![Редактор главы](docs/screenshot-editor.png)
+![Chapter editor](docs/screenshot-editor.png)
 
 ---
 
-## Установка
+## Install
 
-Скачайте `StoryForge_0.1.0_x64-setup.exe` из [Releases](../../releases) и запустите.
+Download `StoryForge_0.1.0_x64-setup.exe` from [Releases](../../releases) and run it.
 
-- Установка для текущего пользователя, права администратора не нужны.
-- Нужен Windows 10/11; WebView2 уже есть в системе.
-- Установщик не подписан, поэтому SmartScreen покажет «Неизвестный издатель» —
-  «Подробнее» → «Выполнить в любом случае».
-- Кнопка «Только распаковать» (portable) кладёт `StoryForge.exe` в папку без установки.
+- Per-user install; no administrator rights needed.
+- Windows 10/11; WebView2 is already part of the system.
+- The installer is unsigned, so SmartScreen will say "Unknown publisher" —
+  **More info** → **Run anyway**.
+- The "extract only" option (portable) drops `StoryForge.exe` in a folder without installing.
 
-## Первый запуск
+## First run
 
-Приложение открывает базу из `%APPDATA%\StoryForge\data\story.db`; при первом
-запуске она создаётся пустой. Книг нет — на пустом экране нажмите **«Импортировать книги»**,
-и приложение разберёт markdown-библию из соседних папок (там, где лежит `book.md`).
+The app opens the database at `%APPDATA%\StoryForge\data\story.db`, created empty on first
+launch. With no books yet, press **Import** on the empty screen and it will parse the
+markdown bible from sibling folders (any folder containing `book.md`).
 
-Открыть **уже существующую** базу (например, от прежней Node-версии) можно двумя способами:
+To open an **existing** database (for example one left by the Node edition):
 
 ```jsonc
 // %APPDATA%\StoryForge\config.json
 { "db_path": "D:\\Books\\StoryForge\\data\\story.db" }
 ```
 
-или переменной окружения `STORYFORGE_DB` с путём к файлу `story.db`.
+or set the `STORYFORGE_DB` environment variable to the path of `story.db`.
 
-Импорт/экспорт работают с папкой книги: `book.md`, `chapters/chNNN.md`, `bible/`,
-`plot/`, `timeline/`, `state/`. Переимпорт не стирает то, чего нет в markdown —
-заметки, факты, раскладку графа, историю версий.
+Import and export operate on the book folder: `book.md`, `chapters/chNNN.md`, `bible/`,
+`plot/`, `timeline/`, `state/`. Re-importing does not destroy what markdown never held —
+notes, facts, graph layout and version history are preserved.
 
-## Экраны
+## Screens
 
-| Экран | Что делает |
+| Screen | What it does |
 |---|---|
-| **Граф** | холст с нодами глав, событий и свободных планов. Панорама, масштаб, рамка выделения, связи между нодами, групповые действия |
-| **Текст** | редактор главы: форматирование, счётчик знаков, версии, сохранение с проверкой ревизии |
-| **Заметки** | карточки справа от текста; фрагмент подсвечивается в тексте и переживает правки выше по главе |
-| **Состояние** | срез мира на выбранный момент: кто где, что знает, что при себе, какие ружья висят |
-| **Персонажи** | карточки: характер, голос, эволюция по главам, связи, появления |
-| **Активность** | что модель записала в книгу через MCP |
-| **ИИ** | диалог по книге и главе, контекст сцены, извлечение фактов, план и черновик |
-| **Справка** | ружья, тайны, таймлайн, правила мира, глоссарий, события |
+| **Graph** | canvas of chapter, event and free-plan nodes. Pan, zoom, marquee select, typed edges, group actions |
+| **Text** | chapter editor: formatting, character counter, versions, revision-checked saving |
+| **Notes** | cards beside the prose; the anchored fragment is highlighted in the text and survives edits above it |
+| **State** | the world at a chosen moment: who is where, what each character knows, what they carry, which guns are still hanging |
+| **Characters** | dossiers: personality, voice, evolution per chapter, relationships, appearances |
+| **Activity** | what the model wrote into the book through MCP |
+| **AI** | chat about the book and the chapter, scene context, fact extraction, plan and draft |
+| **Help** | promises, secrets, timeline, world rules, glossary, events |
 
-### Граф
+### Graph
 
-Один палец — выбрать или перетащить, протяжка по пустому месту — рамка выделения,
-два пальца — прокрутка, щипок — масштаб, правый клик — меню. `Ctrl+A` / `C` / `V` / `D`,
-`Delete`, `Esc`, `Ctrl +/−/0`. Тянуть за правый кружок ноды и бросить на другую — связь.
+One finger selects or drags; dragging empty space draws a selection box; two fingers scroll;
+pinch zooms; right click opens the menu. `Ctrl+A` / `C` / `V` / `D`, `Delete`, `Esc`,
+`Ctrl +/−/0`. Drag a node's right-hand dot onto another node to connect them.
 
-### Текст и заметки
+### Text and notes
 
-`Ctrl+B`, `Ctrl+I`, `Ctrl+Z`, `Ctrl+S`; `Ctrl+Alt+M` — заметка на выделенном тексте.
-Заметка без текста удаляется сама. На диске остаётся обычный markdown: сохранение без
-правок не меняет ни символа.
+`Ctrl+B`, `Ctrl+I`, `Ctrl+Z`, `Ctrl+S`; `Ctrl+Alt+M` turns the selection into a note.
+An empty note deletes itself. The file on disk stays plain markdown: saving without edits
+changes not a single character.
 
-Цикл правки с моделью: **«Собрать для ИИ»** копирует промпт с заметками и абзацами,
-**«Применить правки»** принимает JSON с заменами и проверяет каждую — неоднозначная или
-ненайденная замена отклоняется с причиной, текст в этих местах не трогается.
+Working with a model: **Build for AI** copies a prompt containing the notes and their
+paragraphs; **Apply edits** accepts a JSON list of replacements and validates each one — an
+ambiguous or missing fragment is rejected with a reason and the text there is left untouched.
 
-## ИИ
+## AI
 
-«Настройки API» → DeepSeek или OpenRouter, модель и ключ → «Проверить подключение».
-Ключи лежат в `%APPDATA%\StoryForge\ai-config.json`, в интерфейс и логи не возвращаются.
+**API settings** → DeepSeek or OpenRouter, model and key → **Test connection**. Keys live in
+`%APPDATA%\StoryForge\ai-config.json` and are never returned to the interface or written to logs.
 
-Режимы в панели ИИ: **«Диалог · только ответ»** (обсуждение, книга не меняется) и
-**«Агент · меняет книгу»** (вызовы инструментов: чтение состояния, запись главы, факты).
-Переписка хранится в локальной базе отдельно для книги и для главы.
+Two modes in the AI panel: **Chat · answer only** (discussion; the book is not modified) and
+**Agent · edits the book** (tool calls: read state, write a chapter, record facts). The
+transcript is stored locally per book and per chapter.
 
 ## MCP
 
-Пока приложение запущено, MCP доступен на `http://127.0.0.1:5123/mcp`.
+While the app is running, MCP is available at `http://127.0.0.1:5123/mcp`.
 
 ```bash
 claude mcp add --transport http storyforge http://127.0.0.1:5123/mcp
 ```
 
-Есть и stdio-транспорт — `storyforge-mcp.exe` читает JSON-RPC со stdin. Оба транспорта
-работают через один набор: 22 инструмента (состояние, факты, главы, персонажи, события,
-связи), 9 ресурсов книги (`storyforge://<slug>/<key>`) и промпт `write_chapter`.
+There is also a stdio transport (`storyforge-mcp.exe` reads JSON-RPC on stdin). Both speak the
+same surface: 22 tools (state, facts, chapters, characters, events, relationships), 9 book
+resources (`storyforge://<slug>/<key>`) and the `write_chapter` prompt.
 
-## Сборка из исходников
+## Build from source
 
-Нужны Rust stable и MSVC build tools; Node.js не требуется.
+Rust stable and MSVC build tools are enough; Node.js is not required.
 
 ```powershell
 cargo build --release                 # storyforge.exe
-cargo tauri build                     # окно + установщик NSIS
+cargo tauri build                     # window + NSIS installer
 pwsh scripts/package.ps1              # installer/out: setup.exe + portable zip
-cargo run -p storyforge               # окно
-cargo run -p storyforge -- --serve    # только сервер, печатает URL
-cargo test -p storyforge-core         # 46 тестов
+cargo run -p storyforge               # window
+cargo run -p storyforge -- --serve    # backend only, prints the URL
+cargo test -p storyforge-core         # 46 tests
 ```
 
-## Структура
+## Layout
 
 ```
-crates/core      SQLite (схема один в один), markdown-импорт/экспорт, якоря заметок,
-                 временные срезы мира, клиенты DeepSeek/OpenRouter, поверхность MCP
-crates/mcp       MCP по stdio поверх того же dispatch
-src-tauri        окно, HTTP-API, встроенный интерфейс, упаковка NSIS
-docs/analysis    полный разбор JavaScript-версии, по которому шёл порт
-scripts          дифференциальные тесты против Node-бэкенда
+crates/core      SQLite (schema copied verbatim), markdown import/export, note anchoring,
+                 temporal world slices, DeepSeek/OpenRouter clients, the MCP tool surface
+crates/mcp       stdio MCP transport over the same dispatch
+src-tauri        window, HTTP API, embedded frontend, NSIS packaging
+docs/analysis    full inventory of the JavaScript edition the port followed
+scripts          differential tests against the Node backend
 ```
 
-## Что проверено, а что нет
+## What is verified — and what is not
 
-Проверено: 29 из 29 эндпоинтов чтения отвечают байт-в-байт как Node-версия; запись
-(глава, версии, заметки, правки, факты) — без расхождений; импорт реальной книги совпал
-по счётчикам; экспорт прогнан на копии папки; MCP отдаёт 22 инструмента; 46 тестов.
+Verified: 29 of 29 read endpoints answer byte-identically to the Node edition; writes
+(chapter, versions, notes, edits, facts) show no differences; importing a real book matched
+the counters; export was exercised on a copy of the book folder; MCP lists 22 tools;
+46 tests pass.
 
-Не проверено: ответы ИИ-провайдера живьём (нет ключа в среде сборки) и вручную не
-пройдены экраны «Состояние», «Персонажи», «Активность», «Справка». Известное
-расхождение: при отказе модели агент отвечает «Агент не выполнил действие…» вместо
-сообщения о четырёх попытках записи главы.
+Not verified: live AI provider responses (no key in the build environment), and the
+**State**, **Characters**, **Activity** and **Help** screens have not been walked through by
+hand. Known deviation: when the model refuses, the agent answers "the agent did not perform
+the action" instead of the original four-attempt message.
 
-## Лицензия
+## License
 
-См. [LICENSE](LICENSE).
+See [LICENSE](LICENSE).
