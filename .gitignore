@@ -1,9 +1,27 @@
+# --- build output ---
 /target
 /src-tauri/target
 /src-tauri/gen
 node_modules
+/installer/out
+
+# --- never commit a manuscript ---
+# Copy story.db, the app config and any AI keys to this list before opening
+# the repository publicly. The Rust app keeps them outside the tree
+# (%APPDATA%\StoryForge), but a local experiment may drop copies here.
 *.db
 *.db-wal
 *.db-shm
+*.db.before-import
+*.sqlite
+*.sqlite3
+data/
+ai-config.json
+**/ai-config.json
+.env
+.env.*
+
+# --- editor / OS noise ---
 .DS_Store
-/installer/out
+Thumbs.db
+*.log
