@@ -1,6 +1,6 @@
 # Story Forge web UI — feature and behaviour inventory
 
-Source of truth for this document: the 12 files under `D:\Projects\Writting_BOOK\StoryForge\web`
+Source of truth for this document: the 12 files under `<js-edition>\web`
 (`index.html`, `style.css`, `app.js`, `lib.js`, `editor.js`, `rich.js`, `graph.js`, `ai.js`,
 `codex.js`, `statev.js`, `info.js`, `activity.js`) and `README.md` (Russian). Server route
 implementations were read only to confirm request/response shapes that the frontend depends on.

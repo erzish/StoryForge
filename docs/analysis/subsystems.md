@@ -1,7 +1,7 @@
 # Story Forge — subsystem analysis for the Rust rewrite
 
 Scope: the Node.js subsystems listed in the brief, read in full from
-`D:\Projects\Writting_BOOK\StoryForge`. Everything below is derived from source, not from
+`<js-edition>`. Everything below is derived from source, not from
 the README. Russian identifiers, column names, section titles and prompt strings are quoted
 verbatim because the parser is title-driven: translating a section name silently breaks import.
 

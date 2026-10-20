@@ -1,7 +1,7 @@
 # Story Forge — Server-Side Engineering Inventory
 
 Reference for a Rust reimplementation. Describes **only what exists today** in
-`D:\Projects\Writting_BOOK\StoryForge\server`. No target design is proposed.
+`<js-edition>\server`. No target design is proposed.
 
 Everything below was read from source. Exact identifiers, route strings, column names,
 SQL fragments and Russian user-facing error strings are quoted verbatim, because the
