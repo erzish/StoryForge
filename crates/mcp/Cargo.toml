@@ -1,0 +1,18 @@
+[package]
+name = "storyforge-mcp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "StoryForge MCP server over stdio"
+
+[[bin]]
+name = "storyforge-mcp"
+path = "src/main.rs"
+
+[dependencies]
+storyforge-core = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
